@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="container my-4">
+    <div id="successView"></div>
+</div>
+
+<script>
+    /* html 문서가 모두 읽힌 다음 코드가 실행이 됩니다*/
+    document.addEventListener("DOMContentLoaded", function () {
+        const products = [
+            {
+                id: 1,
+                name: "아메리카노",
+                price: 4000,
+                image: "/images/americano01.png",
+                category: "커피",
+                stock: 50,
+                description: "진한 에스프레소에 물을 더한 기본적인 커피입니다.",
+                regDate: "2026-03-20"
+            },
+            {
+                id: 2,
+                name: "브리오슈",
+                price: 6000,
+                image: "/images/brioche_02.png",
+                category: "빵",
+                stock: 20,
+                description: "버터가 많이 들어간 부드럽고 달콤한 프랑스식 빵입니다.",
+                regDate: "2026-03-21"
+            },
+            {
+                id: 3,
+                name: "카푸치노",
+                price: 5000,
+                image: "/images/cappuccino02.png",
+                category: "커피",
+                stock: 30,
+                description: "에스프레소에 우유 거품을 올린 부드러운 커피입니다.",
+                regDate: "2026-03-22"
+            },
+            {
+                id: 4,
+                name: "치아바타",
+                price: 5000,
+                image: "/images/ciabatta_02.png",
+                category: "빵",
+                stock: 15,
+                description: "이탈리아식 담백하고 쫄깃한 식감의 빵입니다.",
+                regDate: "2026-03-23"
+            },
+            {
+                id: 5,
+                name: "크로아상",
+                price: 3000,
+                image: "/images/croissant_02.png",
+                category: "빵",
+                stock: 25,
+                description: "겹겹이 쌓인 버터 풍미가 특징인 프랑스 대표 빵입니다.",
+                regDate: "2026-03-24"
+            },
+            {
+                id: 6,
+                name: "프렌치바게트",
+                price: 6500,
+                image: "/images/french_baguette_01.png",
+                category: "빵",
+                stock: 10,
+                description: "겉은 바삭하고 속은 부드러운 프랑스 전통 바게트입니다.",
+                regDate: "2026-03-25"
+            }
+        ];
+
+        // URLSearchParams : 퀴리 문자열(파라미터 목록)을 key-value 형태로 분리해주는 함수
+        const params = new URLSearchParams(window.location.search);
+        console.log('파라미터 개수');
+        console.log(params);
+
+        const productId = Number(params.get("id"));
+        console.log('상품 아이디 : ' + productId);
+
+        const product = products.find(item => item.id === productId);
+
+        const successView = document.getElementById("successView")
+
+        if (product) {
+            successView.innerHTML = `
+           <div class="card">
+                    <div class="row g-0">
+
+                        <div class="col-md-4">
+                            <img src="${product.image}"
+                                 class="img-fluid"
+                                 style="width:100%; height:400px;">
+                        </div>
+
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <h3>${product.name}</h3>
+
+                                <table class="table table-striped">
+                                    <tbody>
+                                    <tr>
+                                        <td class="text-center">가격</td>
+                                        <td>${product.price.toLocaleString()}원</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-center">카테고리</td>
+                                        <td>${product.category}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-center">재고</td>
+                                        <td>${product.stock}개</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-center">설명</td>
+                                        <td>${product.description}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-center">등록일자</td>
+                                        <td>${product.regDate}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+
+                                <div class="row mb-3 align-items-center">
+                                    <div class="col-3 text-center">
+                                        <strong>구매 수량</strong>
+                                    </div>
+                                    <div class="col-5">
+                                        <input type="number" min="1" value="1" class="form-control">
+                                    </div>
+                                </div>
+
+                                <div class="d-flex justify-content-center mt-3">
+                                    <a href="/product/list" class="btn btn-primary me-3 px-4">
+                                        이전 목록
+                                    </a>
+                                    <button class="btn btn-success me-3 px-4"
+                                            onclick="alert('장바구니 기능 (예시)')">
+                                        장바구니
+                                    </button>
+                                    <button class="btn btn-danger me-3 px-4">
+                                        주문하기
+                                    </button>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            `;
+
+        } else {
+            successView.innerHTML = `
+                <div class="text-center">
+                    <h3>상품 정보를 찾을 수 없습니다.</h3>
+                </div>
+            `;
+        }
+    })
+</script>
+
+</body>
+</html>
