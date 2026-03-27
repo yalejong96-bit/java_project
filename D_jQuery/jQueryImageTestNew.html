@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .img-box {
+            width: 250px;
+            height: 160px;
+            margin: 10px;
+            cursor: pointer; /* 마우스 커서 포인터 */
+            transition: 0.3s;
+        }
+
+        .zoom:hover { /* pseudo-classes 공부 */
+            transform: scale(1.1);
+        }
+
+        .gray { /* class 속성이 gray인 항목들은 완전 흑백으로 변환 */
+            filter: grayscale(100%);
+        }
+
+        .active { /* 특정 항목이 활성화 되었을 때 */
+            border: 2px solid blue;
+        }
+
+        #mainImage {
+            width: 100%;
+            heignt: 300px;
+            max-width: 500px;
+            transaction: transform 0.3 ease;
+            transform-origin: top left;
+        }
+
+        #mainImage:hover {
+            transform: scale(1.1);
+        }
+
+        .active-thumb {
+            border: 2px solid blue;
+        }
+
+    </style>
+</head>
+<body class="container mt-4">
+<h3>이미지 활용 하기</h3>
+
+<h5>Hover 확대</h5>
+<img src="/images/brioche_02.png" class="img-box zoom">
+<hr>
+
+<h5>클릭시 흑백 전환</h5>
+<img src="/images/croissant_02.png" class="img-box grayImg">
+<hr>
+
+<h5>선택 이미지 강조</h5>
+<div>
+    <img src="/images/croissant_02.png" class="img-box select-img">
+    <img src="/images/cappuccino02.png" class="img-box select-img">
+    <img src="/images/wine01.png" class="img-box select-img">
+</div>
+<hr>
+
+<h5>카테고리 필터</h5>
+<select id="categorySelect" class="form-select w-25 mb-2">
+    <option value="all">전체 보기</option>
+    <option value="bread">빵</option>
+    <option value="drink">음료수</option>
+    <option value="wine">와인</option>
+</select>
+
+<div>
+    <img src="/images/brioche_02.png" class="img-box combo-image" data-category="bread">
+    <img src="/images/french_baguette_01.png" class="img-box combo-image" data-category="bread">
+    <img src="/images/americano01.png" class="img-box combo-image" data-category="drink">
+    <img src="/images/cappuccino02.png" class="img-box combo-image" data-category="drink">
+    <img src="/images/whitewine02.png" class="img-box combo-image" data-category="wine">
+    <img src="/images/wine01.png" class="img-box combo-image" data-category="wine">
+</div>
+<hr>
+
+<h5>썸네일 → 큰 이미지 변경</h5>
+<img id="mainImage" src="/images/americano01.png" class="img-fluid mb-2">
+
+<div>
+    <img src="/images/americano01.png" class="img-box thumb-image active-thumb">
+    <img src="/images/whitewine02.png" class="img-box thumb-image">
+    <img src="/images/brioche_02.png" class="img-box thumb-image">
+</div>
+<hr>
+
+<h5>이미지 회전 (이전 / 다음)</h5>
+<div class="d-flex align-items-center">
+    <button id="prevBtn" class="btn btn-primary me-2">이전</button>
+    <div id="rotateBox" class="d-flex">
+        <img src="/images/brioche_02.png" class="img-box rotate-img">
+        <img src="/images/cappuccino02.png" class="img-box rotate-img">
+        <img src="/images/wine01.png" class="img-box rotate-img">
+    </div>
+    <button id="nextBtn" class="btn btn-success ms-2">다음</button>
+</div>
+<hr>
+
+<h5>이미지 스타일 변경</h5>
+
+<div class="form-check form-check-inline">
+    <input class="form-check-input" type="radio" name="imgStyle" value="rounded" checked>
+    <label class="form-check-label">Rounded Corners</label>
+</div>
+
+<div class="form-check form-check-inline">
+    <input class="form-check-input" type="radio" name="imgStyle" value="rounded-circle">
+    <label class="form-check-label">Circle</label>
+</div>
+
+<div class="form-check form-check-inline">
+    <input class="form-check-input" type="radio" name="imgStyle" value="img-thumbnail">
+    <label class="form-check-label">Thumbnail</label>
+</div>
+
+<div class="image-box">
+    <img id="myImage" src="/images/cappuccino02.png" class="img-fluid rounded">
+</div>
+
+<script>
+    // $(function(){여기에 할일 작성});
+    $(function () {
+        // 흑백 토글
+        $(".grayImg").click(function () {
+            $(this).toggleClass("gray");
+        });
+
+        $(".select-img").click(function () {
+            //$(".select-img").removeClass("active");
+            $(".active").removeClass("active");
+            $(this).addClass("active");
+        });
+
+        $("#categorySelect").change(function () {
+            const selected = $(this).val(); // 선택한 품목명
+            console.log(`선택항목 : ${selected}`);
+
+            if (selected === "all") {
+                $(".combo-image").show();
+            } else {
+                $(".combo-image").hide();
+                /*$(".combo-image[data-category= '"+ selected +"']").show();*/
+                $(`.combo-image[data-category='${selected}']`).show();
+            }
+        });
+
+        $(".thumb-image").click(function () {
+            const newSrc = $(this).attr("src"); /*선택된 이미지의 src 속성 값*/
+            console.log(`선택된 이미지 : ${newSrc}`);
+
+            $("#mainImage").attr("src", newSrc);
+
+            $(".active-thumb").removeClass("active-thumb");
+            $(this).addClass("active-thumb");
+        });
+        $("#prevBtn").click(function () {
+            /* 마지막 항목을 잘라서 맨 앞으로 붙여 넣기 */
+            const last = $("#rotateBox img").last();
+            $("#rotateBox").prepend(last);
+        });
+        $("#nextBtn").click(function () {
+            /* 첫번째 항목을 잘라서 맨 끝에 붙여 넣기 */
+            const first = $("#rotateBox img").first();
+            $("#rotateBox").append(first);
+        });
+
+        $("input[name='imgStyle']").change(function () {
+            const opt_value = $(this).val(); /* 선택한 라디오 버튼의 value 정보 */
+
+            const myImage = $("#myImage"); /* 적용하고자 하는 이미지 객체 */
+
+            /* method chaining */
+            myImage.removeClass().addClass('img-fluid');
+            myImage.addClass(opt_value);
+        });
+    });
+</script>
+
+</body>
+</html>
